@@ -18,14 +18,14 @@ export class ColaboradorRepository {
     }
 
     this.colaboradores.push(colaborador);
-    //retornar o colaborador criado
+      //retornar o colaborador criado
   }
 
-   listar() {
+  listar() {
     return this.colaboradores;
   }
 
-   listarById(id: string) {
+  listarById(id: string) {
     const colaborador = this.colaboradores.find((c) => c.id === id);
     if (!colaborador) {
       throw new NotFoundException('Colaborador não existe!');
@@ -33,12 +33,12 @@ export class ColaboradorRepository {
     return colaborador;
   }
 
-   existEmail(email: string) {
+  existEmail(email: string) {
     const colaborador = this.colaboradores.find((c) => c.email === email);
     return colaborador !== undefined;
   }
 
-   existCPF(cpf: string) {
+  existCPF(cpf: string) {
     return this.colaboradores.find((c) => c.cpf === cpf);
   }
 

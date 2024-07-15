@@ -22,10 +22,7 @@ import { ColaboradorService } from './colaborador.service';
 
 @Controller('/colaborador')
 export class ColaboradorController {
-  constructor(
-    private colaboradorRepository: ColaboradorRepository,
-    private colaboradorService: ColaboradorService,
-  ) {}
+  constructor(private colaboradorService: ColaboradorService) {}
 
   @Post()
   async criaColaborador(@Body() dados: CriaColaboradorDTO) {
@@ -111,6 +108,9 @@ export class ColaboradorController {
     }
   }
 
+  // Regras que deverão ser revistar: 
+
+  // - Delete de Colaborador - Não pode deletar um colaborador se o mesmo tiver dependentes. 
   @Delete('/:id')
   async removeColaborador(@Param('id') id: string) {
     const colaborador = await this.colaboradorService.deletaColaborador(id);

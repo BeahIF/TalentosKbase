@@ -17,6 +17,9 @@ export class MySQLConfigService implements TypeOrmOptionsFactory {
       database: this.configService.get<string>('DB_NAME'),
       entities: [__dirname + '/../**/*.entity{.js,.ts}'],
       synchronize: false,
+    
+      // collation: 'utf8mb4_unicode_ci',
+
     };
   }
 }
