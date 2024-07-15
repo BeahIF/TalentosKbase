@@ -9,22 +9,22 @@ import {
   Param,
   Post,
   Put,
-} from "@nestjs/common";
-import { ColaboradorRepository } from "./colaborador.repository";
+} from '@nestjs/common';
+import { ColaboradorRepository } from './colaborador.repository';
 import {
   CriaColaboradorDTO,
-  ListaColaboradorDTO,
+  ColaboradorDTO,
   EditaColaboradorDTO,
-} from "./colaborador.dto";
-import { ColaboradorEntity } from "./colaborador.entity";
-import { v4 as uuid } from "uuid";
-import { ColaboradorService } from "./colaborador.service";
+} from './colaborador.dto';
+import { ColaboradorEntity } from './colaborador.entity';
+import { v4 as uuid } from 'uuid';
+import { ColaboradorService } from './colaborador.service';
 
-@Controller("/colaborador")
+@Controller('/colaborador')
 export class ColaboradorController {
   constructor(
     private colaboradorRepository: ColaboradorRepository,
-    private colaboradorService: ColaboradorService
+    private colaboradorService: ColaboradorService,
   ) {}
 
   @Post()
@@ -38,9 +38,9 @@ export class ColaboradorController {
     colaboradorEntity.nome = dados?.nome;
     colaboradorEntity.usuario = dados?.usuario;
 
-    this.colaboradorRepository.salvar(colaboradorEntity);
+    this.colaboradorService.criaColaborador(colaboradorEntity);
     return {
-      colaborador: new ListaColaboradorDTO(
+      colaborador: new ColaboradorDTO(
         colaboradorEntity?.nome,
         colaboradorEntity?.id,
         colaboradorEntity?.email,
@@ -48,9 +48,9 @@ export class ColaboradorController {
         colaboradorEntity?.data_nascimento,
         colaboradorEntity?.data_admissao,
         colaboradorEntity?.data_demissao,
-        colaboradorEntity?.motivo_demissao
+        colaboradorEntity?.motivo_demissao,
       ),
-      message: "Colaborador criado!",
+      message: 'Colaborador criado!',
     };
   }
 
@@ -62,10 +62,10 @@ export class ColaboradorController {
     return colaboradoresSalvos;
   }
 
-  @Get("/:id")
-  async getColaboradorById(@Param("id") id: string) {
-    const colaborador = await this.colaboradorRepository.listarById(id);
-    const colaboradorReturn = new ListaColaboradorDTO(
+  @Get('/:id')
+  async getColaboradorById(@Param('id') id: string) {
+    const colaborador = await this.colaboradorService.listaColaboradorById(id);
+    const colaboradorReturn = new ColaboradorDTO(
       colaborador.id,
       colaborador.nome,
       colaborador.email,
@@ -73,52 +73,50 @@ export class ColaboradorController {
       colaborador.data_nascimento,
       colaborador.data_admissao,
       colaborador.data_demissao,
-      colaborador.motivo_demissao
+      colaborador.motivo_demissao,
     );
 
     return colaboradorReturn;
   }
 
-  @Put("/:id")
+  @Put('/:id')
   async atualizaUsuario(
-    @Param("id") id: string,
-    @Body() dados: EditaColaboradorDTO
+    @Param('id') id: string,
+    @Body() dados: EditaColaboradorDTO,
   ) {
     try {
-      const colaboradorAtualizado = await this.colaboradorRepository.atualiza(
-        id,
-        dados
-      );
+      const colaboradorAtualizado =
+        await this.colaboradorService.atualizaColaborador(id, dados);
       return {
         colaborador: colaboradorAtualizado,
-        mensagem: "Colaborador atualizado com sucesso!",
+        mensagem: 'Colaborador atualizado com sucesso!',
       };
     } catch (error) {
       if (error instanceof NotFoundException) {
         throw new HttpException(
           {
             status: HttpStatus.NOT_FOUND,
-            error: "Colaborador não encontrado",
+            error: 'Colaborador não encontrado',
           },
-          HttpStatus.NOT_FOUND
+          HttpStatus.NOT_FOUND,
         );
       }
       throw new HttpException(
         {
           status: HttpStatus.INTERNAL_SERVER_ERROR,
-          error: "Erro ao atualizar colaborador",
+          error: 'Erro ao atualizar colaborador',
         },
-        HttpStatus.INTERNAL_SERVER_ERROR
+        HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
   }
 
-  @Delete("/:id")
-  async removeColaborador(@Param("id") id: string) {
-    const colaborador = await this.colaboradorRepository.remove(id);
+  @Delete('/:id')
+  async removeColaborador(@Param('id') id: string) {
+    const colaborador = await this.colaboradorService.deletaColaborador(id);
     return {
       colaborador: colaborador,
-      messagem: "Colaborador removido com sucesso!",
+      messagem: 'Colaborador removido com sucesso!',
     };
   }
 }

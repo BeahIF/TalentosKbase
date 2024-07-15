@@ -17,7 +17,7 @@ export class CPFUnicoValidator implements ValidatorConstraintInterface {
     value: any,
     validationArguments?: ValidationArguments,
   ): Promise<boolean> {
-    return !!this.colaboradorRepository.existCPF(
+    return !this.colaboradorRepository.existCPF(
       value,
     );
     

@@ -72,7 +72,7 @@ export class EditaColaboradorDTO {
 
 
 
-export class ListaColaboradorDTO {
+export class ColaboradorDTO {
     constructor(
       readonly nome: string,
       readonly id: string,
