@@ -22,7 +22,6 @@ export class DependenteController {
 
   @Post()
   async criaDependente(@Body() dados: CriaDependenteDTO) {
-    console.log(dados);
     const dependenteEntity = new DependenteEntity();
     dependenteEntity.cpf = dados?.cpf;
     dependenteEntity.parentesco = dados?.parentesco;
@@ -39,12 +38,12 @@ export class DependenteController {
     };
   }
 
-  //   @Get()
-  //   async getDependente() {
-  //     const dependenteesSalvos = await this.dependenteService.listaDependente();
+  @Get()
+  async getDependente() {
+    const dependenteesSalvos = await this.dependenteService.listaDependente();
 
-  //     return dependenteesSalvos;
-  //   }
+    return dependenteesSalvos;
+  }
 
   //   @Get('/:id')
   //   async getDependenteById(@Param('id') id: string) {

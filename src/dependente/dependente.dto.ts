@@ -74,12 +74,26 @@ export class DependenteDTO {
     readonly nome: string,
     readonly id: string,
 
-    readonly email: string,
 
     readonly parentesco: string,
 
     readonly data_nascimento: string,
 
     readonly colaborador_id: ColaboradorEntity,
+  ) {}
+}
+
+
+export class DependenteReturn  {
+  constructor(
+    readonly nome: string,
+    readonly id: string,
+
+
+    readonly parentesco: string,
+
+    readonly data_nascimento: string,
+
+    readonly colaborador?: string,
   ) {}
 }

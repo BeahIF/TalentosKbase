@@ -2,37 +2,47 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DependenteEntity } from './dependente.entity';
 import { Repository } from 'typeorm';
-import { DependenteDTO } from './dependente.dto';
+import { DependenteDTO, DependenteReturn } from './dependente.dto';
+import { ColaboradorEntity } from 'src/colaborador/colaborador.entity';
 
 @Injectable()
 export class DependenteService {
   constructor(
     @InjectRepository(DependenteEntity)
     private readonly dependenteRepository: Repository<DependenteEntity>,
+    @InjectRepository(ColaboradorEntity)
+    private readonly colaboradorRepository: Repository<ColaboradorEntity>,
   ) {}
 
   async criaDependente(dependente: DependenteEntity) {
-    console.log("here")
-    console.log(await this.dependenteRepository.save(dependente))
+    console.log('here');
+    // console.log(await this.dependenteRepository.save(dependente))
     return await this.dependenteRepository.save(dependente);
   }
-  // async listaDependente() {
-  //   const dependenteesSalvos = await this.dependenteRepository.find();
-  //   const dependenteesLista = dependenteesSalvos.map(
-  //     (dependente) =>
-  //       new DependenteDTO(
-  //         dependente.nome,
-  //         dependente.id,
-  //         dependente.email,
-  //         dependente.usuario,
-  //         dependente.data_nascimento,
-  //         dependente.data_admissao,
-  //         dependente.data_demissao,
-  //         dependente.motivo_demissao,
-  //       ),
-  //   );
-  //   return dependenteesLista;
-  // }
+
+  async listaDependente() {
+    const dependentesSalvos = await this.dependenteRepository.find({
+      relations: ['colaborador_id'],
+    });
+    console.log(dependentesSalvos);
+    const dependentesLista = await Promise.all(
+      dependentesSalvos.map(async (dependente) => {
+        console.log(dependente);
+        const colaborador = await this.colaboradorRepository.findOne({
+          where: { id: dependente.colaborador_id.id },
+        });
+
+        return new DependenteReturn(
+          dependente.nome,
+          dependente.id,
+          dependente.parentesco,
+          dependente.data_nascimento,
+          colaborador ? colaborador.nome : null,
+        );
+      }),
+    );
+    return dependentesLista;
+  }
 
   // async atualizaDependente(
   //   id: string,
