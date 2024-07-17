@@ -25,7 +25,7 @@ export class CriaDependenteDTO {
 
   @IsString({ message: 'O CPF deve conter 11 caracteres' })
   @MinLength(11)
-  @CPFUnico({ message: 'Já existe um colaborador com este CPF.' })
+  @CPFUnico({ message: 'Já existe um dependente com este CPF.' })
   cpf: string;
 
   @IsString()

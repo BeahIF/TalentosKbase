@@ -6,21 +6,29 @@ import {
   ValidatorConstraint,
   ValidatorConstraintInterface,
 } from 'class-validator';
-import { ColaboradorRepository } from '../colaborador/colaborador.repository';
+import { Repository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
+import { ColaboradorEntity } from 'src/colaborador/colaborador.entity';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 @ValidatorConstraint({ async: true })
 export class EmailUnicoValidator implements ValidatorConstraintInterface {
-  constructor(private colaboradorRepository: ColaboradorRepository) {}
+  constructor(
+    @InjectRepository(ColaboradorEntity)
+    private readonly colaboradorRepository: Repository<ColaboradorEntity>,
+  ) {}
   async validate(
     value: any,
     validationArguments?: ValidationArguments,
   ): Promise<boolean> {
-    const colaboradorExistente = await this.colaboradorRepository.existEmail(
-      value,
-    );
-    return !colaboradorExistente;
+ 
+
+    const colaborador = await this.colaboradorRepository.findOne({
+      where: { email: value },
+    });
+
+    return !colaborador;
   }
 }
 

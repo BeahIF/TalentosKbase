@@ -13,7 +13,11 @@ import {
 
 import { v4 as uuid } from 'uuid';
 import { DependenteService } from './dependente.service';
-import { CriaDependenteDTO, DependenteDTO } from './dependente.dto';
+import {
+  CriaDependenteDTO,
+  DependenteDTO,
+  DependenteReturn,
+} from './dependente.dto';
 import { DependenteEntity } from './dependente.entity';
 
 @Controller('/dependente')
@@ -29,8 +33,9 @@ export class DependenteController {
     dependenteEntity.colaborador_id = dados?.colaborador_id;
     dependenteEntity.id = uuid();
     dependenteEntity.nome = dados?.nome;
-    const dependenteSalvo =
-      this.dependenteService.criaDependente(dependenteEntity);
+    const dependenteSalvo = await this.dependenteService.criaDependente(
+      dependenteEntity,
+    );
     console.log(dependenteSalvo);
     return {
       dependente: dependenteSalvo,
@@ -45,22 +50,10 @@ export class DependenteController {
     return dependenteesSalvos;
   }
 
-  //   @Get('/:id')
-  //   async getDependenteById(@Param('id') id: string) {
-  //     const dependente = await this.dependenteService.listaDependenteById(id);
-  //     const dependenteReturn = new DependenteDTO(
-  //       dependente.id,
-  //       dependente.nome,
-  //       dependente.email,
-  //       dependente.usuario,
-  //       dependente.data_nascimento,
-  //       dependente.data_admissao,
-  //       dependente.data_demissao,
-  //       dependente.motivo_demissao,
-  //     );
-
-  //     return dependenteReturn;
-  //   }
+  @Get('/:id')
+  async getDependenteById(@Param('id') id: string): Promise<DependenteReturn> {
+    return await this.dependenteService.listaDependenteById(id);
+  }
 
   //   @Put('/:id')
   //   async atualizaUsuario(

@@ -38,9 +38,6 @@ export class ColaboradorRepository {
     return colaborador !== undefined;
   }
 
-  existCPF(cpf: string) {
-    return this.colaboradores.find((c) => c.cpf === cpf);
-  }
 
   async atualiza(id: string, dados: Partial<ColaboradorEntity>) {
     const possivelColaborador = this.colaboradores.find(

@@ -55,9 +55,21 @@ export class DependenteService {
   //   await this.dependenteRepository.delete(id);
   // }
 
-  // async listaDependenteById(id: string) {
-  //   return await this.dependenteRepository.findOne({
-  //     where: { id },
-  //   });
-  // }
+  async listaDependenteById(id: string): Promise<DependenteReturn> {
+    const dependente = await this.dependenteRepository.findOne({
+      where: { id },
+      relations: ['colaborador_id'],
+    });
+
+    if (!dependente) {
+      throw new Error('Dependente não encontrado.');
+    }
+
+    return {
+      ...dependente,
+      colaborador: dependente.colaborador_id
+        ? dependente.colaborador_id.nome
+        : null,
+    };
+  }
 }

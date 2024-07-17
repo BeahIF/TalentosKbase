@@ -10,7 +10,6 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
-import { ColaboradorRepository } from './colaborador.repository';
 import {
   CriaColaboradorDTO,
   ColaboradorDTO,
