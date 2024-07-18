@@ -1,4 +1,4 @@
-import { DependenteEntity } from 'src/dependente/dependente.entity';
+import { DependenteEntity } from '../dependente/dependente.entity';
 import {
   Column,
   CreateDateColumn,

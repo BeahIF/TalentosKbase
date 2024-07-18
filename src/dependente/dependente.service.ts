@@ -2,7 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DependenteEntity } from './dependente.entity';
 import { Repository } from 'typeorm';
-import { DependenteDTO, DependenteReturn } from './dependente.dto';
+import {
+  DependenteDTO,
+  DependenteReturn,
+  EditaDependenteDTO,
+} from './dependente.dto';
 import { ColaboradorEntity } from 'src/colaborador/colaborador.entity';
 
 @Injectable()
@@ -15,7 +19,6 @@ export class DependenteService {
   ) {}
 
   async criaDependente(dependente: DependenteEntity) {
-    console.log('here');
     // console.log(await this.dependenteRepository.save(dependente))
     return await this.dependenteRepository.save(dependente);
   }
@@ -24,10 +27,8 @@ export class DependenteService {
     const dependentesSalvos = await this.dependenteRepository.find({
       relations: ['colaborador_id'],
     });
-    console.log(dependentesSalvos);
     const dependentesLista = await Promise.all(
       dependentesSalvos.map(async (dependente) => {
-        console.log(dependente);
         const colaborador = await this.colaboradorRepository.findOne({
           where: { id: dependente.colaborador_id.id },
         });
@@ -44,12 +45,26 @@ export class DependenteService {
     return dependentesLista;
   }
 
-  // async atualizaDependente(
-  //   id: string,
-  //   dependenteEntity: EditaDependenteDTO,
-  // ) {
-  //   await this.dependenteRepository.update(id, dependenteEntity);
-  // }
+  async atualizaDependente(
+    id: string,
+    dependenteEntity: EditaDependenteDTO,
+  ): Promise<DependenteReturn> {
+    await this.dependenteRepository.update(id, dependenteEntity);
+    const dependenteAtualizado = await this.dependenteRepository.findOneOrFail({
+      where: { id },
+      relations: ['colaborador_id'],
+    });
+    const colaborador = await this.colaboradorRepository.findOne({
+      where: { id: dependenteAtualizado.colaborador_id.id },
+    });
+    return new DependenteReturn(
+      dependenteAtualizado.nome,
+      dependenteAtualizado.id,
+      dependenteAtualizado.parentesco,
+      dependenteAtualizado.data_nascimento,
+      colaborador ? colaborador.nome : null,
+    );
+  }
 
   // async deletaDependente(id: string) {
   //   await this.dependenteRepository.delete(id);

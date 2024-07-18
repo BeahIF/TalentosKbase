@@ -42,15 +42,6 @@ export class EditaDependenteDTO {
   @IsOptional()
   nome: string;
 
-  @IsOptional()
-  @IsEmail(undefined, { message: 'O email informado é inválido' })
-  @EmailUnico({ message: 'Já existe um colaborador com este e-mail.' })
-  email: string;
-
-  @IsOptional()
-  @IsNotEmpty()
-  usuario: string;
-
   @IsOptional({ message: 'O CPF deve conter 11 caracteres' })
   @MinLength(11)
   @CPFUnico({ message: 'Já existe um colaborador com este CPF.' })
@@ -60,14 +51,12 @@ export class EditaDependenteDTO {
   data_nascimento: string;
 
   @IsOptional()
-  data_admissao: string;
+  parentesco: string;
 
   @IsOptional()
-  data_demissao: string;
-
-  @IsOptional()
-  motivo_demissao: string;
+  colaborador_id: ColaboradorEntity;
 }
+
 
 export class DependenteDTO {
   constructor(

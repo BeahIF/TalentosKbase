@@ -1,4 +1,4 @@
-import { ColaboradorEntity } from 'src/colaborador/colaborador.entity';
+import { ColaboradorEntity } from '../colaborador/colaborador.entity';
 import {
   Column,
   CreateDateColumn,

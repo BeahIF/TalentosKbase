@@ -17,6 +17,7 @@ import {
   CriaDependenteDTO,
   DependenteDTO,
   DependenteReturn,
+  EditaDependenteDTO,
 } from './dependente.dto';
 import { DependenteEntity } from './dependente.entity';
 
@@ -55,37 +56,38 @@ export class DependenteController {
     return await this.dependenteService.listaDependenteById(id);
   }
 
-  //   @Put('/:id')
-  //   async atualizaUsuario(
-  //     @Param('id') id: string,
-  //     @Body() dados: EditaDependenteDTO,
-  //   ) {
-  //     try {
-  //       const dependenteAtualizado =
-  //         await this.dependenteService.atualizaDependente(id, dados);
-  //       return {
-  //         dependente: dependenteAtualizado,
-  //         mensagem: 'Dependente atualizado com sucesso!',
-  //       };
-  //     } catch (error) {
-  //       if (error instanceof NotFoundException) {
-  //         throw new HttpException(
-  //           {
-  //             status: HttpStatus.NOT_FOUND,
-  //             error: 'Dependente não encontrado',
-  //           },
-  //           HttpStatus.NOT_FOUND,
-  //         );
-  //       }
-  //       throw new HttpException(
-  //         {
-  //           status: HttpStatus.INTERNAL_SERVER_ERROR,
-  //           error: 'Erro ao atualizar dependente',
-  //         },
-  //         HttpStatus.INTERNAL_SERVER_ERROR,
-  //       );
-  //     }
-  //   }
+  @Put('/:id')
+  async atualizaDependente(
+    @Param('id') id: string,
+    @Body() dados: EditaDependenteDTO,
+  ) {
+    try {
+      const dependenteAtualizado =
+        await this.dependenteService.atualizaDependente(id, dados);
+      return {
+        dependente: dependenteAtualizado,
+        mensagem: 'Dependente atualizado com sucesso!',
+      };
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw new HttpException(
+          {
+            status: HttpStatus.NOT_FOUND,
+            error: 'Dependente não encontrado',
+          },
+          HttpStatus.NOT_FOUND,
+        );
+      }
+      console.log(error)
+      throw new HttpException(
+        {
+          status: HttpStatus.INTERNAL_SERVER_ERROR,
+          error: 'Erro ao atualizar dependente',
+        },
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
 
   //   @Delete('/:id')
   //   async removeDependente(@Param('id') id: string) {
