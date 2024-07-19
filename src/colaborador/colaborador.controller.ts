@@ -107,15 +107,35 @@ export class ColaboradorController {
     }
   }
 
-  // Regras que deverão ser revistar: 
+  // Regras que deverão ser revistar:
 
-  // - Delete de Colaborador - Não pode deletar um colaborador se o mesmo tiver dependentes. 
+  // - Delete de Colaborador - Não pode deletar um colaborador se o mesmo tiver dependentes.
   @Delete('/:id')
   async removeColaborador(@Param('id') id: string) {
-    const colaborador = await this.colaboradorService.deletaColaborador(id);
-    return {
-      colaborador: colaborador,
-      messagem: 'Colaborador removido com sucesso!',
-    };
+    try {
+      const colaborador = await this.colaboradorService.deletaColaborador(id);
+      return {
+        colaborador: colaborador,
+        messagem: 'Colaborador removido com sucesso!',
+      };
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw new HttpException(
+          {
+            status: HttpStatus.NOT_FOUND,
+            error: 'Colaborador não encontrado',
+          },
+          HttpStatus.NOT_FOUND,
+        );
+      }
+      throw new HttpException(
+        {
+          status: HttpStatus.INTERNAL_SERVER_ERROR,
+          error:
+            'Opa! Parece que esse colaborador possui dependentes, primeiro você precisa deletar os dependentes!',
+        },
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 }

@@ -78,7 +78,7 @@ export class DependenteController {
           HttpStatus.NOT_FOUND,
         );
       }
-      console.log(error)
+      console.log(error);
       throw new HttpException(
         {
           status: HttpStatus.INTERNAL_SERVER_ERROR,
@@ -89,12 +89,12 @@ export class DependenteController {
     }
   }
 
-  //   @Delete('/:id')
-  //   async removeDependente(@Param('id') id: string) {
-  //     const dependente = await this.dependenteService.deletaDependente(id);
-  //     return {
-  //       dependente: dependente,
-  //       messagem: 'Dependente removido com sucesso!',
-  //     };
-  //   }
+  @Delete('/:id')
+  async removeDependente(@Param('id') id: string) {
+    const dependente = await this.dependenteService.deletaDependente(id);
+    return {
+      dependente: dependente,
+      messagem: 'Dependente removido com sucesso!',
+    };
+  }
 }

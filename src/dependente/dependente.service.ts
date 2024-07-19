@@ -2,11 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DependenteEntity } from './dependente.entity';
 import { Repository } from 'typeorm';
-import {
-  DependenteDTO,
-  DependenteReturn,
-  EditaDependenteDTO,
-} from './dependente.dto';
+import { DependenteReturn, EditaDependenteDTO } from './dependente.dto';
 import { ColaboradorEntity } from 'src/colaborador/colaborador.entity';
 
 @Injectable()
@@ -66,9 +62,9 @@ export class DependenteService {
     );
   }
 
-  // async deletaDependente(id: string) {
-  //   await this.dependenteRepository.delete(id);
-  // }
+  async deletaDependente(id: string) {
+    await this.dependenteRepository.delete(id);
+  }
 
   async listaDependenteById(id: string): Promise<DependenteReturn> {
     const dependente = await this.dependenteRepository.findOne({
