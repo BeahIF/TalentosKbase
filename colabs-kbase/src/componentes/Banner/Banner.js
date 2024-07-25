@@ -1,11 +1,10 @@
 import './Banner.css'
-function Banner() {
+export const Banner=()=> {
      return (
-        <header className='banner'>
-        <img src="/imagens/Marketing-Maria-20-1024x594.png" alt="O banner principal da página"/>
+        <><header className='banner'>
+             <img src="/imagens/Marketing-Maria-20-1024x594.png" alt="O banner principal da página" />
 
-        </header>
+         </header><h1>Colaboradores Kbase </h1></>
     )
 }
-document.createElement('img')
 export default Banner;
