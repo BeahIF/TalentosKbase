@@ -1,6 +1,6 @@
 import './Colaborador.css'
 
-const Colaborador = ({nome, email, usuario,dependentes, onEdit,onViewDependentes }) =>{
+const Colaborador = ({nome, email, usuario,dependentes, onEdit,onViewDependentes,onDelete }) =>{
     return (<div className='colaborador'>
     <div className='cabecalho'>
    </div>
@@ -10,7 +10,10 @@ const Colaborador = ({nome, email, usuario,dependentes, onEdit,onViewDependentes
     onClick={onEdit}>
     Editar
 </button>
-<button className='view-dependentes-button' onClick={onViewDependentes}>Ver Dependentes</button>
+<button className='view-dependentes-button' onClick={onViewDependentes}>
+Ver Dependentes</button>
+<button className='delete-button' onClick={onDelete}>Deletar</button>
+
 </div></div>
 )}
 

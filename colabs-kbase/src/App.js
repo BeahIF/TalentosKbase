@@ -76,7 +76,14 @@ function App() {
 if (loading) return <div>Loading...</div>;
 if (error) return <div>{error}</div>;
 
-
+const handleDeleteColaborador = async (id) => {
+  try {
+    await axios.delete(`http://localhost:8485/colaborador/${id}`);
+    setColaboradores(colaboradores.filter(colaborador => colaborador.id !== id));
+  } catch (err) {
+    console.error('Erro ao deletar colaborador:', err);
+  }
+};
   const handleEditColaborador = (colaborador) => {
       // Lógica para editar o colaborador
       // Aqui você pode abrir um modal ou redirecionar para uma página de edição
@@ -152,7 +159,7 @@ const handleSaveEdit = async (updatedColaborador) => {
         corSecundaria={time.corSecundaria}
         colaboradores={colaboradores.filter(
           colaborador=>colaborador.time=== time.nome)} 
-           onEdit={handleEditColaborador}
+           onEdit={handleEditColaborador}           onDelete={handleDeleteColaborador}
            onViewDependentes={handleViewDependentes} 
            />
         

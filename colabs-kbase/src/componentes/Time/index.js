@@ -21,6 +21,8 @@ const Time = (props) =>{
                 usuario={colaborador.usuario}                               dependentes={colaborador.dependentes}
                 onEdit={() => props.onEdit(colaborador)} 
                 onViewDependentes={() => handleViewDependentes(colaborador)}
+                onDelete={() => props.onDelete(colaborador.id)}
+
                 />
              </div> )}
                 </div>
