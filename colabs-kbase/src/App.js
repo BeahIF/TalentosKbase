@@ -6,6 +6,13 @@ import Time from './componentes/Time';
 import Dashboard from './componentes/Dashboard';
 import axios from 'axios';
 
+const formatDate = (dateString) => {
+  const date = new Date(dateString);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
 
 function App() {
   const times = [{
@@ -38,8 +45,8 @@ function App() {
     corSecundaria:'#FDE7E8'
   },]
 
-  const [colaboradores, setColaboradores]=useState([        { time:"DevOps",nome: 'João', email: 'joao@example.com', usuario: 'joaouser', dependentes: [{ nome: 'Maria', parentesco: 'filha' }] },
-  ])
+  const [colaboradores, setColaboradores]=useState([        ])
+  console.log("colaboradores", colaboradores)
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -53,6 +60,7 @@ function App() {
     const fetchColaboradores = async () => {
         try {
             const response = await axios.get('http://localhost:8485/colaborador');
+           
             setColaboradores(response.data);
             setLoading(false);
         } catch (err) {
@@ -82,26 +90,54 @@ if (error) return <div>{error}</div>;
     setDependentesDoColaborador(colaborador.dependentes);
     setShowDependentesModal(true);
 };
-
-  const handleSaveEdit = (updatedColaborador) => {
-      // Atualizar a lista de colaboradores com as informações editadas
-      console.log("teste")
-      console.log(updatedColaborador)
-      console.log(colaboradores.filter(colab=>console.log(colab)))
-      console.log("acaba")
-      setColaboradores(colaboradores.map(colab =>
-          colab.id === updatedColaborador.id ? updatedColaborador : colab
-      ));
-      console.log(colaboradores)
-      setShowEditModal(false); // Fechar o modal após salvar
-  };
+const handleSaveEdit = async (updatedColaborador) => {
+  console.log("teste")
+  console.log(updatedColaborador)
+  try {
+    // Obter o colaborador original
+    const colaboradorOriginal = colaboradores.find(colab => colab.id === updatedColaborador.id);
+    
+    // Construir um objeto com apenas os campos modificados
+    const camposModificados = {};
+    
+    // Comparar os valores originais com os novos valores
+    for (const key in updatedColaborador) {
+      if (updatedColaborador[key] !== colaboradorOriginal[key]) {
+        camposModificados[key] = updatedColaborador[key];
+      }
+    }
+    // Se não houver campos modificados, não enviar a requisição
+    if (Object.keys(camposModificados).length === 0) {
+      console.log("Nenhum campo foi alterado.");
+      return;
+    }
+    console.log("CAmpos modificados", camposModificados)
+    // Enviar apenas os campos modificados para o backend
+    const response = await axios.put(`http://localhost:8485/colaborador/${updatedColaborador.id}`, camposModificados);
+    console.log("response editar", response.data)
+    // Atualizar a lista de colaboradores com as informações editadas
+    setColaboradores(colaboradores.map(colab =>
+      colab.id === updatedColaborador.id ? { ...colab, ...response.data.colaborador } : colab
+    ));
+    setShowEditModal(false); // Fechar o modal após salvar
+  } catch (error) {
+    console.error("Erro ao salvar colaborador editado:", error);
+  }
+};
 
   const handleCloseModal = () => {
     setShowDependentesModal(false);
 };
-  const aoNovoColaboradorAdicionado =(colaborador)=>{
-    setColaboradores([...colaboradores, colaborador])
-
+  const aoNovoColaboradorAdicionado =async (colaborador)=>{
+    console.log("no novo colaborador adicionado")
+    console.log(colaborador)
+    try {
+      const response = await axios.post('http://localhost:8485/colaborador', colaborador);
+      console.log("response do criado", response)
+      setColaboradores([...colaboradores, response.data.colaborador]);
+    } catch (error) {
+      console.error('Erro ao adicionar colaborador:', error);
+    }
   }
   return (
     <div className="App">
@@ -125,7 +161,7 @@ if (error) return <div>{error}</div>;
         <EditModal 
             colaborador={editingColaborador} 
             onSave={handleSaveEdit} 
-            onClose={() => setShowEditModal(false)} 
+            onClose={() => setShowEditModal(false)} times={times} 
         />
     )}
     {showDependentesModal && (
@@ -140,13 +176,23 @@ if (error) return <div>{error}</div>;
   );
 }
 
-const EditModal = ({ colaborador, onSave, onClose }) => {
+const EditModal = ({ colaborador, onSave, onClose , times}) => {
   const [nome, setNome] = useState(colaborador.nome);
   const [email, setEmail] = useState(colaborador.email);
   const [usuario, setUsuario] = useState(colaborador.usuario);
-
+  const [cpf, setCpf] = useState(colaborador.cpf || '');
+  const [dataNascimento, setDataNascimento] = useState(colaborador.data_nascimento || '');
+  const [dataAdmissao, setDataAdmissao] = useState(colaborador.data_admissao || '');
+  const [dataDemissao, setDataDemissao] = useState(colaborador.data_demissao || '');
+  const [motivoDemissao, setMotivoDemissao] = useState(colaborador.motivo_demissao || '');
+  const [time, setTime] = useState(colaborador.time || '');
   const handleSave = () => {
-      onSave({ ...colaborador, nome, email, usuario });
+      onSave({ ...colaborador, nome, email, usuario , cpf,
+        data_nascimento: dataNascimento,
+        data_admissao: dataAdmissao,
+        data_demissao: dataDemissao,
+        motivo_demissao: motivoDemissao,
+        time});
   };
 
   return (
@@ -165,6 +211,34 @@ const EditModal = ({ colaborador, onSave, onClose }) => {
                   Usuário:
                   <input type="text" value={usuario} onChange={(e) => setUsuario(e.target.value)} />
               </label>
+              <label>
+              CPF:
+              <input type="text" value={cpf} onChange={(e) => setCpf(e.target.value)} />
+            </label>
+            <label>
+              Data de Nascimento:
+              <input type="date" value={dataNascimento} onChange={(e) => setDataNascimento(e.target.value)} />
+            </label>
+            <label>
+              Data de Admissão:
+              <input type="date" value={dataAdmissao} onChange={(e) => setDataAdmissao(e.target.value)} />
+            </label>
+            <label>
+              Data de Demissão:
+              <input type="date" value={dataDemissao} onChange={(e) => setDataDemissao(e.target.value)} />
+            </label>
+            <label>
+              Motivo de Demissão:
+              <input type="text" value={motivoDemissao} onChange={(e) => setMotivoDemissao(e.target.value)} />
+            </label>
+            <label>
+              Time:
+              <select value={time} onChange={(e) => setTime(e.target.value)}>
+                {times.map((t) => (
+                  <option key={t.nome} value={t.nome}>{t.nome}</option>
+                ))}
+              </select>
+            </label>
               <button onClick={handleSave}>Salvar</button>
               <button onClick={onClose}>Cancelar</button>
           </div>
