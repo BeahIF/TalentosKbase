@@ -33,6 +33,9 @@ export class CriaColaboradorDTO {
 
   @IsString()
   data_admissao: string;
+  
+  @IsString()
+  time: string;
 }
 
 
@@ -68,6 +71,9 @@ export class EditaColaboradorDTO {
   
   @IsOptional()
   motivo_demissao:string
+  
+  @IsOptional()
+  time:string
 }
 
 
@@ -86,6 +92,7 @@ export class ColaboradorDTO {
       readonly data_admissao: string,
       readonly data_demissao: string,
       readonly motivo_demissao: string,
+      readonly time:string
     ) {}
   }
 

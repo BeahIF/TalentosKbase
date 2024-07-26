@@ -27,6 +27,7 @@ export class ColaboradorService {
           colaborador.data_admissao,
           colaborador.data_demissao,
           colaborador.motivo_demissao,
+          colaborador.time
         ),
     );
     return colaboradoresLista;
@@ -36,7 +37,7 @@ export class ColaboradorService {
     id: string,
     colaboradorEntity: EditaColaboradorDTO,
   ) {
-    await this.colaboradorRepository.update(id, colaboradorEntity);
+    return await this.colaboradorRepository.update(id, colaboradorEntity);
   }
 
   async deletaColaborador(id: string) {

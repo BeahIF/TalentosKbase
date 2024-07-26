@@ -15,7 +15,6 @@ export class DependenteService {
   ) {}
 
   async criaDependente(dependente: DependenteEntity) {
-    // console.log(await this.dependenteRepository.save(dependente))
     return await this.dependenteRepository.save(dependente);
   }
 
