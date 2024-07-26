@@ -46,7 +46,8 @@ export class ColaboradorController {
         colaboradorEntity?.data_admissao,
         colaboradorEntity?.data_demissao,
         colaboradorEntity?.motivo_demissao,
-        colaboradorEntity?.time
+        colaboradorEntity?.time,
+        colaboradorEntity.cpf
       ),
       message: 'Colaborador criado!',
     };
@@ -72,7 +73,8 @@ export class ColaboradorController {
       colaborador.data_admissao,
       colaborador.data_demissao,
       colaborador.motivo_demissao,
-      colaborador.time
+      colaborador.time,
+      colaborador.cpf
     );
 
     return colaboradorReturn;
@@ -83,7 +85,6 @@ export class ColaboradorController {
     @Param('id') id: string,
     @Body() dados: EditaColaboradorDTO,
   ) {
-    console.log(dados)
     try {
       const colaboradorAtualizado =
         await this.colaboradorService.atualizaColaborador(id, dados);
@@ -92,7 +93,6 @@ export class ColaboradorController {
         mensagem: 'Colaborador atualizado com sucesso!',
       };
     } catch (error) {
-      console.log(error)
       if (error instanceof NotFoundException) {
         throw new HttpException(
           {

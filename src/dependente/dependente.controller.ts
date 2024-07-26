@@ -37,7 +37,6 @@ export class DependenteController {
     const dependenteSalvo = await this.dependenteService.criaDependente(
       dependenteEntity,
     );
-    console.log(dependenteSalvo);
     return {
       dependente: dependenteSalvo,
       message: 'Dependente criado!',
@@ -78,7 +77,6 @@ export class DependenteController {
           HttpStatus.NOT_FOUND,
         );
       }
-      console.log(error);
       throw new HttpException(
         {
           status: HttpStatus.INTERNAL_SERVER_ERROR,

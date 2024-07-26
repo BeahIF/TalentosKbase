@@ -92,7 +92,9 @@ export class ColaboradorDTO {
       readonly data_admissao: string,
       readonly data_demissao: string,
       readonly motivo_demissao: string,
-      readonly time:string
+      readonly time:string,
+
+      readonly cpf:string
     ) {}
   }
 

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ColaboradorEntity } from './colaborador.entity';
 import { Repository } from 'typeorm';
@@ -27,17 +27,29 @@ export class ColaboradorService {
           colaborador.data_admissao,
           colaborador.data_demissao,
           colaborador.motivo_demissao,
-          colaborador.time
+          colaborador.time,
+          colaborador.cpf
         ),
     );
     return colaboradoresLista;
   }
-
   async atualizaColaborador(
     id: string,
     colaboradorEntity: EditaColaboradorDTO,
   ) {
-    return await this.colaboradorRepository.update(id, colaboradorEntity);
+    // Atualizar o colaborador
+    await this.colaboradorRepository.update(id, colaboradorEntity);
+
+    // Buscar o colaborador atualizado
+    const colaboradorAtualizado = await this.colaboradorRepository.findOne({
+      where: { id },
+    });
+
+    if (!colaboradorAtualizado) {
+      throw new NotFoundException('Colaborador não encontrado');
+    }
+
+    return colaboradorAtualizado;
   }
 
   async deletaColaborador(id: string) {
