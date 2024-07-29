@@ -9,6 +9,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
 } from '@nestjs/common';
 import {
   CriaColaboradorDTO,
@@ -33,7 +34,7 @@ export class ColaboradorController {
     colaboradorEntity.id = uuid();
     colaboradorEntity.nome = dados?.nome;
     colaboradorEntity.usuario = dados?.usuario;
-    colaboradorEntity.time = dados?.time
+    colaboradorEntity.time = dados?.time;
 
     this.colaboradorService.criaColaborador(colaboradorEntity);
     return {
@@ -47,16 +48,19 @@ export class ColaboradorController {
         colaboradorEntity?.data_demissao,
         colaboradorEntity?.motivo_demissao,
         colaboradorEntity?.time,
-        colaboradorEntity.cpf
+        colaboradorEntity.cpf,
       ),
       message: 'Colaborador criado!',
     };
   }
 
   @Get()
-  async getColaborador() {
-    const colaboradoresSalvos =
-      await this.colaboradorService.listaColaborador();
+  async getColaborador(@Query('page') page = 1, @Query('limit') limit = 100) {
+    limit = limit > 100 ? 100 : limit;
+    const colaboradoresSalvos = await this.colaboradorService.listaColaborador(
+      page,
+      limit,
+    );
 
     return colaboradoresSalvos;
   }
@@ -74,7 +78,7 @@ export class ColaboradorController {
       colaborador.data_demissao,
       colaborador.motivo_demissao,
       colaborador.time,
-      colaborador.cpf
+      colaborador.cpf,
     );
 
     return colaboradorReturn;
@@ -143,4 +147,36 @@ export class ColaboradorController {
       );
     }
   }
+
+  @Get('/:id/dependentes')
+  async getDependentes(@Param('id') id: string) {
+    try {
+      const dependentes = await this.colaboradorService.listaDependentes(id);
+      if (!dependentes) {
+        throw new NotFoundException('Dependentes não encontrados');
+      }
+      return {
+        dependentes,
+        mensagem: 'Dependentes encontrados com sucesso!',
+      };
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw new HttpException(
+          {
+            status: HttpStatus.NOT_FOUND,
+            error: 'Dependentes não encontrados',
+          },
+          HttpStatus.NOT_FOUND,
+        );
+      }
+      throw new HttpException(
+        {
+          status: HttpStatus.INTERNAL_SERVER_ERROR,
+          error: 'Erro ao buscar dependentes',
+        },
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
 }
