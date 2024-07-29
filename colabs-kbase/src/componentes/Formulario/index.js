@@ -50,8 +50,6 @@ const [time, setTime]=useState('')
       <CampoTexto obrigatorio={true} label="Data Admissão" placeholder="Digite a data de admissão"
       valor={data_admissao} aoAlterado={valor=>setAdmissao(valor)}/>
       
-      <ListaSuspensa label="Time" itens={props.times}
-      valor={time} aoAlterado={valor=>setTime(valor)}/>
       <Botao texto="Criar colaborador!"/>
       </form></section>
     )

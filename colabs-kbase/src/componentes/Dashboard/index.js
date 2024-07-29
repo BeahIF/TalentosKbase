@@ -2,18 +2,25 @@
 import React from 'react';
 import './Dashboard.css';
 import { useState ,useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 
-const Dashboard = ({ colaboradores }) => {
-    console.log("dashboard",colaboradores)
-    const quantidadeColaboradores = colaboradores?.length;
-   
+const Dashboard = () => {
+    const navigate = useNavigate();
+
   const [dependentes, setDependentes]=useState([      ])
+  const [colaboradores, setColaboradores]=useState([        ])
+
+  console.log("dashboard",colaboradores)
+  const quantidadeColaboradores = colaboradores?.length;
   console.log("dependentes", dependentes)
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  
+  const handleVerColaboradores = () => {
+    navigate('/colaboradores');
+  };
+
   useEffect(() => {
     const fetchColaboradores = async () => {
         try {
@@ -22,6 +29,22 @@ const Dashboard = ({ colaboradores }) => {
 console.log(response)
 console.log(response.data)
             setDependentes(response.data);
+            setLoading(false);
+        } catch (err) {
+          console.log(err)
+            setError('Erro ao carregar os dados');
+            setLoading(false);
+        }
+    };
+
+    fetchColaboradores();
+}, []);
+useEffect(() => {
+    const fetchColaboradores = async () => {
+        try {
+            const response = await axios.get('http://localhost:8485/colaborador');
+           
+            setColaboradores(response.data);
             setLoading(false);
         } catch (err) {
           console.log(err)
@@ -60,7 +83,8 @@ if (error) return <div>{error}</div>;
                     <p>Gráfico aqui</p>
                 </div>
             </div>
-        </div>
+            <button onClick={handleVerColaboradores}>Ver Colaboradores</button>
+            </div>
     );
 };
 
