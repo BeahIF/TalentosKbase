@@ -155,8 +155,10 @@ export class ColaboradorController {
       if (!dependentes) {
         throw new NotFoundException('Dependentes não encontrados');
       }
+      const colaborador = dependentes[0];
+
       return {
-        dependentes,
+        ...colaborador,
         mensagem: 'Dependentes encontrados com sucesso!',
       };
     } catch (error) {
