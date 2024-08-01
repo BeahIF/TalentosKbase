@@ -3,7 +3,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { ColaboradorEntity } from './colaborador.entity';
 import { Repository } from 'typeorm';
 import { EditaColaboradorDTO, ColaboradorDTO } from './colaborador.dto';
-import { DependenteEntity } from 'src/dependente/dependente.entity';
 
 @Injectable()
 export class ColaboradorService {
@@ -32,7 +31,6 @@ export class ColaboradorService {
           colaborador.data_admissao,
           colaborador.data_demissao,
           colaborador.motivo_demissao,
-          colaborador.time,
           colaborador.cpf,
         ),
     );
@@ -42,10 +40,7 @@ export class ColaboradorService {
     id: string,
     colaboradorEntity: EditaColaboradorDTO,
   ) {
-    // Atualizar o colaborador
     await this.colaboradorRepository.update(id, colaboradorEntity);
-
-    // Buscar o colaborador atualizado
     const colaboradorAtualizado = await this.colaboradorRepository.findOne({
       where: { id },
     });
@@ -67,15 +62,23 @@ export class ColaboradorService {
     });
   }
 
-  async listaDependentes(id: string): Promise<ColaboradorEntity[]> {
+  async listaDependentes(
+    id: string,
+    page = 1,
+    limit = 10,
+  ): Promise<ColaboradorEntity[]> {
+    const skip = (page - 1) * limit;
+
     const colaborador = await this.colaboradorRepository.find({
       where: { id },
       relations: ['dependentes'],
+      skip,
+      take: limit,
     });
     if (!colaborador) {
       throw new NotFoundException('Colaborador não encontrado');
     }
 
-    return colaborador
+    return colaborador;
   }
 }

@@ -9,6 +9,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
 } from '@nestjs/common';
 
 import { v4 as uuid } from 'uuid';
@@ -44,8 +45,8 @@ export class DependenteController {
   }
 
   @Get()
-  async getDependente() {
-    const dependenteesSalvos = await this.dependenteService.listaDependente();
+  async getDependente(@Query('page') page = 1, @Query('limit') limit = 100) {
+    const dependenteesSalvos = await this.dependenteService.listaDependente(page, limit);
 
     return dependenteesSalvos;
   }

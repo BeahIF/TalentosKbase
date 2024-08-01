@@ -34,7 +34,6 @@ export class ColaboradorController {
     colaboradorEntity.id = uuid();
     colaboradorEntity.nome = dados?.nome;
     colaboradorEntity.usuario = dados?.usuario;
-    colaboradorEntity.time = dados?.time;
 
     this.colaboradorService.criaColaborador(colaboradorEntity);
     return {
@@ -47,7 +46,6 @@ export class ColaboradorController {
         colaboradorEntity?.data_admissao,
         colaboradorEntity?.data_demissao,
         colaboradorEntity?.motivo_demissao,
-        colaboradorEntity?.time,
         colaboradorEntity.cpf,
       ),
       message: 'Colaborador criado!',
@@ -77,7 +75,6 @@ export class ColaboradorController {
       colaborador.data_admissao,
       colaborador.data_demissao,
       colaborador.motivo_demissao,
-      colaborador.time,
       colaborador.cpf,
     );
 
@@ -149,9 +146,17 @@ export class ColaboradorController {
   }
 
   @Get('/:id/dependentes')
-  async getDependentes(@Param('id') id: string) {
+  async getDependentes(
+    @Param('id') id: string,
+    @Query('page') page = 1,
+    @Query('limit') limit = 100,
+  ) {
     try {
-      const dependentes = await this.colaboradorService.listaDependentes(id);
+      const dependentes = await this.colaboradorService.listaDependentes(
+        id,
+        page,
+        limit,
+      );
       if (!dependentes) {
         throw new NotFoundException('Dependentes não encontrados');
       }
@@ -180,5 +185,4 @@ export class ColaboradorController {
       );
     }
   }
-
 }

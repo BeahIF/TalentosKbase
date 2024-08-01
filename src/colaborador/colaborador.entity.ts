@@ -50,6 +50,5 @@ export class ColaboradorEntity {
   @DeleteDateColumn({ name: 'deleted_at' })
   deletedAt: string;
   
-  @Column({ name: 'time', length: 100, nullable: true })
-  time: string;
+  
 }

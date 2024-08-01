@@ -18,9 +18,13 @@ export class DependenteService {
     return await this.dependenteRepository.save(dependente);
   }
 
-  async listaDependente() {
+  async listaDependente(page = 1, limit = 10) {
+    const skip = (page - 1) * limit;
+
     const dependentesSalvos = await this.dependenteRepository.find({
       relations: ['colaborador_id'],
+      skip,
+      take: limit,
     });
     const dependentesLista = await Promise.all(
       dependentesSalvos.map(async (dependente) => {
