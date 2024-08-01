@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import Botao from '../Botao'
 import CampoTexto from '../CampoTexto/CampoTexto'
-import ListaSuspensa from '../ListaSuspensa'
 import './Formulario.css'
 
 const Formulario = (props) =>{
@@ -11,18 +10,16 @@ const [usuario, setUsuario]=useState('')
 const [cpf, setCPF]=useState('')
 const [data_nascimento, setNascimento]=useState('')
 const [data_admissao, setAdmissao]=useState('')
-const [time, setTime]=useState('')
 
-    // const times=['Programação','DevOps','Data Science','Front-end','UX', 'Mobile','Inovação e Gestão']
     const aoSalvar = (evento) =>{
       evento.preventDefault()
-      console.log('Form foi submetido', nome, email, usuario,cpf, data_nascimento,data_admissao, time)
+      console.log('Form foi submetido', nome, email, usuario,cpf, data_nascimento,data_admissao)
       props.aoColaboradorCadastrado({
         nome,
         email,
         usuario,
         cpf,data_nascimento,data_admissao,
-        time
+        
     })
     setNome('')
     setEmail('')
@@ -31,7 +28,6 @@ const [time, setTime]=useState('')
     setNascimento('')
     setAdmissao('')
 
-    setTime('')
     }
     return (
         <section className='formulario'>

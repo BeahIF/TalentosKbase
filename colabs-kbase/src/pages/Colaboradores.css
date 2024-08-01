@@ -1,0 +1,69 @@
+/* Adicione isso ao seu arquivo CSS */
+.modal {
+    position: fixed;
+   
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+
+}
+
+.modal-edit-dependente {
+  z-index: 1100; /* valor maior para modal de edição de dependente */
+}
+.modal-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 5px;
+    width: 80%;
+    max-width: 600px;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.modal-content h2 {
+    margin-top: 0;
+}
+
+.modal-content ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.modal-content li {
+    margin-bottom: 10px;
+}
+
+.modal-content button {
+    margin-top: 10px;
+}
+
+
+.button-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+  }
+  
+  .button-container button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .button-container button:hover {
+    background-color: #0056b3;
+  }
+  
+  .create-dependente-button {
+    background-color: #28a745;
+  }
+  
+  .create-dependente-button:hover {
+    background-color: #218838;
+  }
