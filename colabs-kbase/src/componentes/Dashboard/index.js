@@ -1,4 +1,4 @@
-// src/Dashboard.js
+import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, CartesianGrid } from 'recharts';
 import React from 'react';
 import './Dashboard.css';
 import { useState ,useEffect } from 'react';
@@ -12,9 +12,9 @@ const Dashboard = () => {
   const [dependentes, setDependentes]=useState([      ])
   const [colaboradores, setColaboradores]=useState([        ])
 
-  console.log("dashboard",colaboradores)
-  const quantidadeColaboradores = colaboradores?.length;
-  console.log("dependentes", dependentes)
+  const quantidadeColaboradores = colaboradores?.colaboradores?.length;
+
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const handleVerColaboradores = () => {
@@ -25,13 +25,10 @@ const Dashboard = () => {
     const fetchColaboradores = async () => {
         try {
             const response = await axios.get('http://localhost:8485/dependente');
-            console.log("response")
-console.log(response)
-console.log(response.data)
+          
             setDependentes(response.data);
             setLoading(false);
         } catch (err) {
-          console.log(err)
             setError('Erro ao carregar os dados');
             setLoading(false);
         }
@@ -61,6 +58,9 @@ if (error) return <div>{error}</div>;
 
     const quantidadeDependentes = dependentes?.length
 
+    const data = [
+        { nome: 'Quantidade', colaboradores: quantidadeColaboradores, dependentes: quantidadeDependentes }
+      ];
     return (
         <div className="dashboard">
             <h1>Dashboard</h1>
@@ -77,11 +77,20 @@ if (error) return <div>{error}</div>;
             {/* Gráfico Opcional */}
             <div className="chart-container">
                 <h2>Gráfico de Colaboradores e Dependentes</h2>
-                {/* Placeholder para gráfico */}
-                <div className="chart-placeholder">
-                    {/* Aqui você pode integrar um gráfico como Chart.js, Recharts, ou outro */}
-                    <p>Gráfico aqui</p>
-                </div>
+                <BarChart
+                    width={600}
+                    height={300}
+                    data={data}
+                    margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+                >
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="nome" />
+                    <YAxis />
+                    <Tooltip />
+                    <Legend />
+                    <Bar dataKey="colaboradores" fill="#8884d8" />
+                    <Bar dataKey="dependentes" fill="#82ca9d" />
+                  </BarChart>
             </div>
             <button onClick={handleVerColaboradores}>Ver Colaboradores</button>
             </div>

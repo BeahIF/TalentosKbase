@@ -41,9 +41,9 @@ const [data_admissao, setAdmissao]=useState('')
       valor={usuario} aoAlterado={valor=>setUsuario(valor)}/>
       <CampoTexto obrigatorio={true} label="CPF" placeholder="Digite o cpf"
       valor={cpf} aoAlterado={valor=>setCPF(valor)}/>
-      <CampoTexto obrigatorio={true} label="Data Nascimento" placeholder="Digite sua data de nascimento"
+      <CampoTexto obrigatorio={true} label="Data Nascimento" placeholder="Digite sua data de nascimento" tipo="date"
       valor={data_nascimento} aoAlterado={valor=>setNascimento(valor)}/>
-      <CampoTexto obrigatorio={true} label="Data Admissão" placeholder="Digite a data de admissão"
+      <CampoTexto obrigatorio={true} label="Data Admissão" placeholder="Digite a data de admissão" tipo="date"
       valor={data_admissao} aoAlterado={valor=>setAdmissao(valor)}/>
       
       <Botao texto="Criar colaborador!"/>

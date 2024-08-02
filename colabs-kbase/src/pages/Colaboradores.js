@@ -26,31 +26,31 @@ const ColaboradoresPage = () => {
   const [dependenteColaboradorId, setDependenteColaboradorId] = useState(null); 
   const [showCreateDependenteModal, setShowCreateDependenteModal] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const [page, setPage] = useState(1);
 
+  const [totalPages, setTotalPages] = useState(1);
 
   useEffect(() => {
-    const fetchColaboradores = async () => {
+    fetchColaboradores(page)
+  },[page])
+      const fetchColaboradores = async (page) => {
       try {
-        const response = await axios.get('http://localhost:8485/colaborador');
-        setColaboradores(response.data);
+        const response = await axios.get(`http://localhost:8485/colaborador?page=${page}&limit=5`);
+        setTotalPages(response.data.totalPages); // Supondo que a API retorne o número total de páginas
+
+        setColaboradores(response.data.colaboradores);
         setLoading(false);
       } catch (err) {
-        console.log(err);
         setError('Erro ao carregar os dados');
         setLoading(false);
       }
     };
 
-    fetchColaboradores();
-  }, []);
   useEffect(() => {
-    console.log("indo pegar os dependentes")
     const fetchDependentes = async () => {
-        console.log(dependenteColaboradorId)
       if (dependenteColaboradorId) {
         try {
           const response = await axios.get(`http://localhost:8485/colaborador/${dependenteColaboradorId}/dependentes`);
-          console.log(response.data)
           setDependentesDoColaborador(response.data?.dependentes);
         } catch (err) {
           console.error('Erro ao carregar dependentes:', err);
@@ -100,15 +100,13 @@ const ColaboradoresPage = () => {
   };
 
   const handleEditDependente = (dependente) => {
-    console.log("no handleEditDependente")
-    console.log(dependente)
+  
     setEditingDependente(dependente);
     setShowEditModalDependente(true);
   };
 
   const handleViewDependentes = (colaboradorId) => {
-    console.log("handleViewDependentes")
-    console.log(colaboradorId)
+
     setDependenteColaboradorId(colaboradorId);
     setShowDependentesModal(true);
   };
@@ -172,6 +170,7 @@ const ColaboradoresPage = () => {
       setDependentesDoColaborador([...dependentesDoColaborador, response.data.dependente]);
       setShowCreateDependenteModal(false);
     } catch (error) {
+      console.log(error)
       console.error("Erro ao salvar novo dependente:", error);
       setErrorMessage(error.response.data.message || "Erro ao salvar novo dependente");
 
@@ -182,6 +181,7 @@ const ColaboradoresPage = () => {
   };
   const aoNovoColaboradorAdicionado = async (colaborador) => {
     try {
+
       const response = await axios.post('http://localhost:8485/colaborador', colaborador);
       setColaboradores([...colaboradores, response.data.colaborador]);
     } catch (error) {
@@ -191,6 +191,18 @@ const ColaboradoresPage = () => {
     }
   };
 
+  // Funções de navegação
+  const handlePrevPage = () => {
+    if (page > 1) {
+      setPage(page - 1);
+    }
+  };
+
+  const handleNextPage = () => {
+    if (page < totalPages) {
+      setPage(page + 1);
+    }
+  };
   return (
     <div className="ColaboradoresPage">
       <Formulario aoColaboradorCadastrado={aoNovoColaboradorAdicionado} />
@@ -216,6 +228,13 @@ const ColaboradoresPage = () => {
             <button onClick={() => handleViewDependentes(colaborador.id)}>Ver Dependentes</button>
           </div>
         ))}
+      </div>
+
+      {/* Paginação */}
+      <div className="pagination">
+        <button onClick={handlePrevPage} disabled={page === 1}>Anterior</button>
+        <span>Página {page} de {totalPages}</span>
+        <button onClick={handleNextPage} disabled={page === totalPages}>Próxima</button>
       </div>
 
       {showEditModal && (
@@ -319,10 +338,12 @@ const EditModal = ({ colaborador, onSave, onClose , times}) => {
     const [email, setEmail] = useState(colaborador.email);
     const [usuario, setUsuario] = useState(colaborador.usuario);
     const [cpf, setCpf] = useState(colaborador.cpf || '');
+
     const [dataNascimento, setDataNascimento] = useState(colaborador.data_nascimento || '');
     const [dataAdmissao, setDataAdmissao] = useState(colaborador.data_admissao || '');
     const [dataDemissao, setDataDemissao] = useState(colaborador.data_demissao || '');
     const [motivoDemissao, setMotivoDemissao] = useState(colaborador.motivo_demissao || '');
+    
     const handleSave = () => {
         onSave({ ...colaborador, nome, email, usuario , cpf,
           data_nascimento: dataNascimento,
