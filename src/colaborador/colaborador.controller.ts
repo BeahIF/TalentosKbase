@@ -29,7 +29,7 @@ export class ColaboradorController {
     const colaboradorEntity = new ColaboradorEntity();
     colaboradorEntity.cpf = dados?.cpf;
     colaboradorEntity.data_admissao = dados?.data_admissao;
-    colaboradorEntity.data_nascimento = dados?.data_admissao;
+    colaboradorEntity.data_nascimento = dados?.data_nascimento;
     colaboradorEntity.email = dados?.email;
     colaboradorEntity.id = uuid();
     colaboradorEntity.nome = dados?.nome;

@@ -16,6 +16,8 @@ export class ColaboradorService {
   }
   async listaColaborador(page = 1, limit = 10) {
     const skip = (page - 1) * limit;
+    const totalColaboradores = await this.colaboradorRepository.count();
+    const totalPages = Math.ceil(totalColaboradores / limit);
     const colaboradoresSalvos = await this.colaboradorRepository.find({
       skip,
       take: limit,
@@ -34,7 +36,7 @@ export class ColaboradorService {
           colaborador.cpf,
         ),
     );
-    return colaboradoresLista;
+    return { colaboradores: colaboradoresLista, totalPages };
   }
   async atualizaColaborador(
     id: string,
