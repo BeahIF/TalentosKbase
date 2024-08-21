@@ -15,6 +15,11 @@ import {
   CriaColaboradorDTO,
   ColaboradorDTO,
   EditaColaboradorDTO,
+  CreateColaboradorResponse,
+  UpdateColaboradorResponse,
+  DeleteColaboradorResponse,
+  GetDependentesResponse,
+  ListaColaboradorResponse,
 } from './colaborador.dto';
 import { ColaboradorEntity } from './colaborador.entity';
 import { v4 as uuid } from 'uuid';
@@ -25,7 +30,9 @@ export class ColaboradorController {
   constructor(private colaboradorService: ColaboradorService) {}
 
   @Post()
-  async criaColaborador(@Body() dados: CriaColaboradorDTO) {
+  async criaColaborador(
+    @Body() dados: CriaColaboradorDTO,
+  ): Promise<CreateColaboradorResponse> {
     const colaboradorEntity = new ColaboradorEntity();
     colaboradorEntity.cpf = dados?.cpf;
     colaboradorEntity.data_admissao = dados?.data_admissao;
@@ -53,7 +60,10 @@ export class ColaboradorController {
   }
 
   @Get()
-  async getColaborador(@Query('page') page = 1, @Query('limit') limit = 100) {
+  async getColaborador(
+    @Query('page') page = 1,
+    @Query('limit') limit = 100,
+  ): Promise<ListaColaboradorResponse> {
     limit = limit > 100 ? 100 : limit;
     const colaboradoresSalvos = await this.colaboradorService.listaColaborador(
       page,
@@ -64,7 +74,7 @@ export class ColaboradorController {
   }
 
   @Get('/:id')
-  async getColaboradorById(@Param('id') id: string) {
+  async getColaboradorById(@Param('id') id: string): Promise<ColaboradorDTO> {
     const colaborador = await this.colaboradorService.listaColaboradorById(id);
     const colaboradorReturn = new ColaboradorDTO(
       colaborador.id,
@@ -85,7 +95,7 @@ export class ColaboradorController {
   async atualizaUsuario(
     @Param('id') id: string,
     @Body() dados: EditaColaboradorDTO,
-  ) {
+  ): Promise<UpdateColaboradorResponse> {
     try {
       const colaboradorAtualizado =
         await this.colaboradorService.atualizaColaborador(id, dados);
@@ -117,12 +127,13 @@ export class ColaboradorController {
 
   // - Delete de Colaborador - Não pode deletar um colaborador se o mesmo tiver dependentes.
   @Delete('/:id')
-  async removeColaborador(@Param('id') id: string) {
+  async removeColaborador(
+    @Param('id') id: string,
+  ): Promise<DeleteColaboradorResponse> {
     try {
-      const colaborador = await this.colaboradorService.deletaColaborador(id);
+      await this.colaboradorService.deletaColaborador(id);
       return {
-        colaborador: colaborador,
-        messagem: 'Colaborador removido com sucesso!',
+        mensagem: 'Colaborador removido com sucesso!',
       };
     } catch (error) {
       if (error instanceof NotFoundException) {
@@ -150,7 +161,7 @@ export class ColaboradorController {
     @Param('id') id: string,
     @Query('page') page = 1,
     @Query('limit') limit = 100,
-  ) {
+  ): Promise<GetDependentesResponse> {
     try {
       const dependentes = await this.colaboradorService.listaDependentes(
         id,

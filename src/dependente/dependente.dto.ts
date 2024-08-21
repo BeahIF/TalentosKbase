@@ -8,6 +8,7 @@ import {
 import { EmailUnico } from '../validacao/email-unico.validator';
 import { CPFUnico } from '../validacao/cpf-unico.validator';
 import { ColaboradorEntity } from 'src/colaborador/colaborador.entity';
+import { DependenteEntity } from './dependente.entity';
 
 // RegrRegras a Considerar:
 
@@ -57,12 +58,10 @@ export class EditaDependenteDTO {
   colaborador_id: ColaboradorEntity;
 }
 
-
 export class DependenteDTO {
   constructor(
     readonly nome: string,
     readonly id: string,
-
 
     readonly parentesco: string,
 
@@ -72,12 +71,10 @@ export class DependenteDTO {
   ) {}
 }
 
-
-export class DependenteReturn  {
+export class DependenteReturn {
   constructor(
     readonly nome: string,
     readonly id: string,
-
 
     readonly parentesco: string,
 
@@ -85,4 +82,14 @@ export class DependenteReturn  {
 
     readonly colaborador?: string,
   ) {}
+}
+
+export class CriaDependenteResponse {
+  dependente: DependenteEntity;
+  message: string;
+}
+
+export class AtualizaDependenteResponse {
+  dependente: DependenteReturn;
+  mensagem: string;
 }
