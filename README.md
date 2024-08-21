@@ -12,46 +12,26 @@ Como Iniciar
 1. Back-end (NestJS)
    Clone o repositório:
 
-bash
-Copiar código
 git clone -b beatriz https://github.com/BeahIF/TalentosKbase/tree/main
-cd repo
-Instale as dependências:
 
-bash
-Copiar código
 cd back-end
 npm install
-Configure o banco de dados:
-Edite o arquivo .env com suas configurações de banco de dados.
 
-Execute as migrações:
-
-bash
-Copiar código
-npx prisma migrate deploy
 Inicie o servidor:
 
-bash
-Copiar código
-npm run start:dev 2. Front-end (ReactJS)
-Clone o repositório:
+npm run start:dev
 
-bash
-Copiar código
+2. Front-end (ReactJS)
+   Clone o repositório:
+
 git clone -b frontBeatriz https://github.com/BeahIF/TalentosKbase/tree/main
-cd repo
-Instale as dependências:
 
-bash
-Copiar código
 cd front-end
 npm install
 Inicie o servidor de desenvolvimento:
 
-bash
-Copiar código
 npm start
+
 Tecnologias Utilizadas
 Back-end: NestJS - TypeORM
 Front-end: ReactJS
