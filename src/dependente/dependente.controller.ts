@@ -15,7 +15,9 @@ import {
 import { v4 as uuid } from 'uuid';
 import { DependenteService } from './dependente.service';
 import {
+  AtualizaDependenteResponse,
   CriaDependenteDTO,
+  CriaDependenteResponse,
   DependenteDTO,
   DependenteReturn,
   EditaDependenteDTO,
@@ -27,7 +29,9 @@ export class DependenteController {
   constructor(private dependenteService: DependenteService) {}
 
   @Post()
-  async criaDependente(@Body() dados: CriaDependenteDTO) {
+  async criaDependente(
+    @Body() dados: CriaDependenteDTO,
+  ): Promise<CriaDependenteResponse> {
     const dependenteEntity = new DependenteEntity();
     dependenteEntity.cpf = dados?.cpf;
     dependenteEntity.parentesco = dados?.parentesco;
@@ -45,8 +49,14 @@ export class DependenteController {
   }
 
   @Get()
-  async getDependente(@Query('page') page = 1, @Query('limit') limit = 100) {
-    const dependenteesSalvos = await this.dependenteService.listaDependente(page, limit);
+  async getDependente(
+    @Query('page') page = 1,
+    @Query('limit') limit = 100,
+  ): Promise<DependenteReturn[]> {
+    const dependenteesSalvos = await this.dependenteService.listaDependente(
+      page,
+      limit,
+    );
 
     return dependenteesSalvos;
   }
@@ -60,7 +70,7 @@ export class DependenteController {
   async atualizaDependente(
     @Param('id') id: string,
     @Body() dados: EditaDependenteDTO,
-  ) {
+  ): Promise<AtualizaDependenteResponse> {
     try {
       const dependenteAtualizado =
         await this.dependenteService.atualizaDependente(id, dados);
@@ -89,11 +99,12 @@ export class DependenteController {
   }
 
   @Delete('/:id')
-  async removeDependente(@Param('id') id: string) {
-    const dependente = await this.dependenteService.deletaDependente(id);
+  async removeDependente(
+    @Param('id') id: string,
+  ): Promise<{ mensagem: string }> {
+    await this.dependenteService.deletaDependente(id);
     return {
-      dependente: dependente,
-      messagem: 'Dependente removido com sucesso!',
+      mensagem: 'Dependente removido com sucesso!',
     };
   }
 }

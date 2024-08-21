@@ -65,7 +65,7 @@ export class DependenteService {
     );
   }
 
-  async deletaDependente(id: string) {
+  async deletaDependente(id: string): Promise<void> {
     await this.dependenteRepository.delete(id);
   }
 

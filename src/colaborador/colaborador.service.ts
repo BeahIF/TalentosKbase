@@ -2,7 +2,11 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ColaboradorEntity } from './colaborador.entity';
 import { Repository } from 'typeorm';
-import { EditaColaboradorDTO, ColaboradorDTO } from './colaborador.dto';
+import {
+  EditaColaboradorDTO,
+  ColaboradorDTO,
+  ListaColaboradorResponse,
+} from './colaborador.dto';
 
 @Injectable()
 export class ColaboradorService {
@@ -11,10 +15,15 @@ export class ColaboradorService {
     private readonly colaboradorRepository: Repository<ColaboradorEntity>,
   ) {}
 
-  async criaColaborador(colaborador: ColaboradorEntity) {
-    await this.colaboradorRepository.save(colaborador);
+  async criaColaborador(
+    colaborador: ColaboradorEntity,
+  ): Promise<ColaboradorEntity> {
+    return await this.colaboradorRepository.save(colaborador);
   }
-  async listaColaborador(page = 1, limit = 10) {
+  async listaColaborador(
+    page = 1,
+    limit = 10,
+  ): Promise<ListaColaboradorResponse> {
     const skip = (page - 1) * limit;
     const totalColaboradores = await this.colaboradorRepository.count();
     const totalPages = Math.ceil(totalColaboradores / limit);
@@ -41,7 +50,7 @@ export class ColaboradorService {
   async atualizaColaborador(
     id: string,
     colaboradorEntity: EditaColaboradorDTO,
-  ) {
+  ): Promise<ColaboradorEntity> {
     await this.colaboradorRepository.update(id, colaboradorEntity);
     const colaboradorAtualizado = await this.colaboradorRepository.findOne({
       where: { id },
@@ -54,11 +63,11 @@ export class ColaboradorService {
     return colaboradorAtualizado;
   }
 
-  async deletaColaborador(id: string) {
+  async deletaColaborador(id: string): Promise<void> {
     await this.colaboradorRepository.delete(id);
   }
 
-  async listaColaboradorById(id: string) {
+  async listaColaboradorById(id: string): Promise<ColaboradorEntity> {
     return await this.colaboradorRepository.findOne({
       where: { id },
     });
